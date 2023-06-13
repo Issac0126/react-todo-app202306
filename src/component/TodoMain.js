@@ -9,6 +9,12 @@ const TodoMain = () => {
         <TodoItem />
         <TodoItem />
         <TodoItem />
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
     </ul>
   )
 }
