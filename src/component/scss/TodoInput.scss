@@ -1,13 +1,11 @@
 
 
 .form-wrapper{
-    // background-color: orange;
     position: absolute;
-    bottom: 0;
+    bottom: -100px;
 
     width: 100%;
     // height: 200px;
-
 
     .insert-form{
         background-color: #f8f9fa;
@@ -25,7 +23,21 @@
         font-size: 18px;
         box-sizing: border-box;
     }
+
+    animation: slideInput 20s ease-in 1s backwards;
 }
+
+@keyframes slideInput {
+    to{
+        bottom: -100px;
+        opacity: 0.5;
+    }
+    from{
+        bottom: 0;
+        opacity: 1;
+    }
+}
+
 
 .insert-btn{
     background-color: #38d9a9;
