@@ -24,15 +24,15 @@
         box-sizing: border-box;
     }
 
-    animation: slideInput 20s ease-in 1s backwards;
+    animation: slideInput 0.3s ease-out forwards;
 }
 
 @keyframes slideInput {
-    to{
-        bottom: -100px;
-        opacity: 0.5;
-    }
     from{
+        bottom: -60px;
+        opacity: 0.4;
+    }
+    to{
         bottom: 0;
         opacity: 1;
     }
