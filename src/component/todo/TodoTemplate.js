@@ -7,7 +7,7 @@ import TodoInput from './TodoInput';
 const TodoTemplate = () => {
 
   // 서버에 할일 목록(json)을 요청(fetch)해서 받아와야 한다.
-  const API_BASE_URL = 'http://localhost:8181/api/todos'
+  const API_BASE_URL = 'http://localhost:8181/api/todos';
 
   // 원래는 fetch로 가져와야하지만 지금은 가져왔다는 가정으로 작업한다.
   // todos 배열의 상태 관리
@@ -28,7 +28,7 @@ const TodoTemplate = () => {
   // 자식 컴포넌트에서 전달받은 함수를 호출하면서 매개값으로 데이터를 전달한다.
   const addTodo = todoText => {
     const newTodo = {
-      title: todoText,
+      title: todoText
     }
 
     // 리액트의 상태변수는 setter를 통한 변경만 렌더링에 적용된다.
@@ -71,15 +71,15 @@ const TodoTemplate = () => {
 
   // 할 일 체크 처리 함수
   const checkTodo = (id, done) => {
-    const chTodo = {
-      'id': id,
-      'done': !done
-    }
+
     //맵이 대신 복사본을 만들어 반복문을 돌려준다.
     fetch(API_BASE_URL, { 
-      method : "PUT", 
-      headers : { 'content-type' : 'application/json'},
-      body : JSON.stringify(chTodo)
+      'method' : 'PUT', 
+      'headers' : { 'content-type' : 'application/json'},
+      'body' : JSON.stringify({
+        'done': !done,
+        'id': id
+      })
     })
       .then(res => res.json())
       .then(json => setTodos(json.todos) );
