@@ -3,11 +3,12 @@ import './scss/TodoTemplate.scss'
 import TodoHeader from './TodoHeader';
 import TodoMain from './TodoMain';
 import TodoInput from './TodoInput';
+import { API_BASE_URL as BASE, TODO } from '../../config/host-config';
 
 const TodoTemplate = () => {
 
   // 서버에 할일 목록(json)을 요청(fetch)해서 받아와야 한다.
-  const API_BASE_URL = 'http://localhost:8181/api/todos';
+  const API_BASE_URL = BASE + TODO;
 
   // 원래는 fetch로 가져와야하지만 지금은 가져왔다는 가정으로 작업한다.
   // todos 배열의 상태 관리
@@ -42,9 +43,7 @@ const TodoTemplate = () => {
       body : JSON.stringify(newTodo)
     })
     .then(res => res.json())
-    .then(json => {
-      setTodos(json.todos);
-    })
+    .then(json =>  setTodos(json.todos) )
       // setTodos([...todos, newTodo]) 원래는 새 배열 만들어서 추가해줬지만 json이 와서 필요없어짐!
 
   }
@@ -74,9 +73,9 @@ const TodoTemplate = () => {
 
     //맵이 대신 복사본을 만들어 반복문을 돌려준다.
     fetch(API_BASE_URL, { 
-      'method' : 'PUT', 
-      'headers' : { 'content-type' : 'application/json'},
-      'body' : JSON.stringify({
+      method : 'PUT', 
+      headers : { 'content-type' : 'application/json' },
+      body : JSON.stringify({
         'done': !done,
         'id': id
       })
@@ -95,6 +94,7 @@ const TodoTemplate = () => {
   
   // todos에 변화가 있으면 재렌더링을 한다.
   useEffect(() => { 
+      console.log(API_BASE_URL);
 
       //페이지가 렌더링 됨과 동시에 할 일 목록을 요청해서 뿌려주겠다.
       fetch(API_BASE_URL)
