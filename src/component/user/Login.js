@@ -55,7 +55,6 @@ const Login = () => {
     localStorage.setItem('LOGIN_USERNAME', userName);
     localStorage.setItem('USER_ROLE', role);
     
-
     
     // fetch(REQUEST_URL, {
     //   method: 'post',

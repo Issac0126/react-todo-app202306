@@ -39,9 +39,10 @@ const Header = () => {
                                 alignItems: 'center'
                             }
                         }>
-                            <Typography variant="h4">
-                                { isLogin() ? userName + '님' : '오늘' }
-                                의 할 일
+                            <Typography variant="h4" >
+                                <Link to='/' className='header-title'>
+                                    { isLogin() ? userName + '님' : '오늘' }의 할 일
+                                </Link>
                             </Typography>
                         </div>
                     </Grid>

@@ -139,8 +139,6 @@ const TodoTemplate = () => {
           //로딩 완료 처리
           setLoading(false);
 
-
-
         });
 
    }, [])
