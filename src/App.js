@@ -7,6 +7,8 @@ import { Route, Routes } from 'react-router-dom';
 import Join from './component/user/Join';
 import Login from './component/user/Login';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
   return (
     <>

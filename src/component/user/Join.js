@@ -97,13 +97,16 @@ const Join = () => {
       })
       .then(json => {
         console.log(json);
+        console.log(correct.email); // true false 잘 들어오는지 값 확인하기 
+         // 잘 들어오면 삼항연산식 확인해보기~~~ 고쳐라~~ 
         if(json){ 
           msg = '중복된 이메일입니다.'
         } else{
           msg = '사용 가능한 이메일 입니다.'
           flag = true;
         }
-
+        
+        console.log('이메일 점검중 : '+msg+flag);
         setUserValue({...userValue, email: email});  //버튼 만들어서 클릭 이벤트에 넣기. 
         setMessage({...message, email: msg});   // 원랜 이렇게 하면 안됨.
         setCorrect({...correct, email: flag});
@@ -114,12 +117,14 @@ const Join = () => {
       });
 
 
-  }
+  };
 
 
 
   //이메일 입력창 체인지 이벤트 핸들러
   const emailHandler = e => {
+
+    console.log('입력창 체인지 들어옴~');
 
     //입력한 값을 상태변수에 저장
     const inputVal = e.target.value;
@@ -138,7 +143,7 @@ const Join = () => {
     }
 
     saveInputState({
-      key: 'email', inputVal, msg, flag })
+      key: 'email', inputVal, msg, flag });
 
   }
 
@@ -247,7 +252,6 @@ const Join = () => {
       alert('입력란을 다시 확인해 주세요!')
     }
   }
-
 
 
 
