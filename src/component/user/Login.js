@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {Button, Container, Grid,
   TextField, Typography, Link} from "@mui/material";
 import { API_BASE_URL as BASE, USER } from '../../config/host-config';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../util/AuthContext';
 
 const Login = () => {
 
   const redirection = useNavigate();
+
+  // AuthContext에서 onLogin 함수를 가져온다. 
+  const {onLogin, isLoggedIn} = useContext(AuthContext);
+
 
   const REQUEST_URL = BASE + USER + "/signin";
 
@@ -42,20 +47,15 @@ const Login = () => {
     
     const { token, userName, email, role } = await res.json();
     // console.log('json :'+json);
+ 
+    // Context API를 사용하여 로그인 상태를 업데이트한다.
+    onLogin(token, userName, role);
 
+    
     //홈으로 리다이렉트 
     redirection('/');
-
-    //json에 담긴 인증정보를 클라이언트에 보관
-    // 1. 로컬 스토리지 - 브라우저가 종료되어도 보관됨.
-    // 2. 세션 스토리지 - 브라우저가 종료되면 사라짐.
-
-    // localStorage.setItem('key', value); 형식으로 데이터를 저장한다.
-    localStorage.setItem('ACCESS_TOKEN', token);
-    localStorage.setItem('LOGIN_USERNAME', userName);
-    localStorage.setItem('USER_ROLE', role);
     
-    
+
     // fetch(REQUEST_URL, {
     //   method: 'post',
     //   headers: {'content-type' : 'application/json'},
@@ -86,13 +86,8 @@ const Login = () => {
   const loginHandler = e => {
     e.preventDefault();
 
-    
-
     //서버에 로그인 요청 전송
     fetchLogin();
-
-
-
 
   }
 

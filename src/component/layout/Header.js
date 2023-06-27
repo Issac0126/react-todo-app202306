@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {AppBar, Toolbar, Grid, 
     Typography, Button} from "@mui/material";
 import './header.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { isLogin, getLoginUserInfo } from '../../util/login-utils';
+import AuthContext from '../../util/AuthContext';
 
 const Header = () => {
 
     const redirection = useNavigate();
 
-    const [userInfo, setUserInfo] = useState({});
+    // AuthContext에서 로그인 상태와 onLogout 함수를 가져온다.
+    const {isLoggedIn, onLogout, userName} = useContext(AuthContext);
 
-    const {token, userName, role} = userInfo
-
+    
     //로그아웃 핸들러
     const logoutHandler = e =>{
-        localStorage.clear();
+        // AuthContext의 onLogout 함수를 호출하여 로그인 상태를 업데이트한다.
+        onLogout();
         redirection('/login');
     }
-
-
-
-    useEffect(() => {
-        setUserInfo(getLoginUserInfo()); //화면이 처음으로 렌더링 될 때 부르겠다. 
-    }, []);
+    
+    // const [userInfo, setUserInfo] = useState({});
+    // const {token, userName, role} = userInfo
+    // useEffect(() => {
+    //     setUserInfo(getLoginUserInfo()); //화면이 처음으로 렌더링 될 때 부르겠다. 
+    // }, []);
 
     return (
         <AppBar position="fixed" style={{
@@ -41,7 +43,11 @@ const Header = () => {
                         }>
                             <Typography variant="h4" >
                                 <Link to='/' className='header-title'>
-                                    { isLogin() ? userName + '님' : '오늘' }의 할 일
+                                    { 
+                                        isLoggedIn 
+                                        ? userName + '님' : '오늘' 
+                                    } 
+                                    의 할 일
                                 </Link>
                             </Typography>
                         </div>

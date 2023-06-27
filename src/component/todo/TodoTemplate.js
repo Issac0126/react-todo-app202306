@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './scss/TodoTemplate.scss'
 import TodoHeader from './TodoHeader';
 import TodoMain from './TodoMain';
 import TodoInput from './TodoInput';
-import { API_BASE_URL as BASE, TODO } from '../../config/host-config';
+import { API_BASE_URL as BASE, TODO, USER } from '../../config/host-config';
 import { useNavigate } from 'react-router-dom';
 import { getLoginUserInfo } from '../../util/login-utils';
 import { Spinner } from 'reactstrap';
+import AuthContext from '../../util/AuthContext';
 
 const TodoTemplate = () => {
 
   //로딩 상태값 관리
   const [loading, setLoading] = useState(true);
+  //로그인 인증 토큰 가져오기
+  const [token, setToken] = useState(getLoginUserInfo().token);
+
 
   const redirection = useNavigate();
 
-  //로그인 인증 토큰 가져오기
-  const token = getLoginUserInfo().token;
+  const {setUserInfo} = useContext(AuthContext);
+
+  // const {token} = getLoginUserInfo;
 
   //요청 헤더 설정
   const requestHeader = {
@@ -26,6 +31,7 @@ const TodoTemplate = () => {
 
   // 서버에 할일 목록(json)을 요청(fetch)해서 받아와야 한다.
   const API_BASE_URL = BASE + TODO;
+  const API_USER_URL = BASE + USER;
 
   // 원래는 fetch로 가져와야하지만 지금은 가져왔다는 가정으로 작업한다.
   // todos 배열의 상태 관리
@@ -61,8 +67,13 @@ const TodoTemplate = () => {
       headers : requestHeader,
       body : JSON.stringify(newTodo)
     })
-    .then(res => res.json())
-    .then(json =>  setTodos(json.todos) )
+    .then(res => {
+      if(res.status === 200 ) return res.json();
+      else if(res.status === 401) alert('일반회원의 일정 등록은 5개로 제한됩니다')
+    })
+    .then(json =>  {
+      json && setTodos(json.todos)
+    })
       // setTodos([...todos, newTodo]) 원래는 새 배열 만들어서 추가해줬지만 json이 와서 필요없어짐!
 
   }
@@ -110,11 +121,39 @@ const TodoTemplate = () => {
   //할 일 n개 세기 함수
   const countRestTodo = () => todos.filter(todo => !todo.done).length;
 
+
+  //비동기 방식 등급 승격 함수
+  const fetchPromote = async() => {
+    const res = await fetch(API_USER_URL+'/promote',{
+      method : 'PUT',
+      headers : requestHeader
+    });
+
+    if(res.status === 403){
+      alert('이미 프리미엄 회원입니다.')
+    } else if(res.status === 200){
+      const json = await res.json();
+      setUserInfo(json);
+      setToken(json.token);
+    }
+
+
+  }
   
+  //등급 승격 서버 요청 (프리미엄)
+  const promote = () => {
+    console.log('등급 승격 서버 요청!');
+    fetchPromote();
+  }
+
+
+
+
+
+
   // todos에 변화가 있으면 재렌더링을 한다.
   useEffect(() => { 
       
-
       //페이지가 렌더링 됨과 동시에 할 일 목록을 요청해서 뿌려주겠다.
       fetch(API_BASE_URL, {
         method : 'GET',
@@ -144,10 +183,11 @@ const TodoTemplate = () => {
    }, [])
 
 
+
    //로딩이 끝난 후 보여줄 컴포넌트 
    const loadEndedPage = (
     <>
-      <TodoHeader count={countRestTodo} />
+      <TodoHeader count={countRestTodo} promote={promote} />
       <TodoMain todoList={todos} remove={removeTodo} check={checkTodo}/>
       <TodoInput addTodo={ addTodo }/>
     </>
@@ -156,7 +196,7 @@ const TodoTemplate = () => {
     //로딩 중일 때 보여줄 컴포넌트
     const loadingPage = (
       <div className='loading'>
-        <Spinner color='danger'>loading...</Spinner>
+        <Spinner color='info'>loading...</Spinner>
       </div>
     )
 
