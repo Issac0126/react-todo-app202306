@@ -54,10 +54,7 @@ export const AuthContextProvider = props => {
         localStorage.setItem('ACCESS_TOKEN', token);
         localStorage.setItem('LOGIN_USERNAME', userName);
         localStorage.setItem('USER_ROLE', role);
-
     }
-
-
 
     return(
         <AuthContext.Provider value={{
